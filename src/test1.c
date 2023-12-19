@@ -14,6 +14,11 @@ void InitPin() {
 	GPIOC->CRH |= GPIO_CRH_MODE13_1;
     GPIOC->ODR |= GPIO_ODR_ODR13;
 
+    GPIOC->CRH &= ~GPIO_CRH_CNF15;
+	GPIOC->CRH |= GPIO_CRH_CNF15_0;
+	GPIOC->CRH |= GPIO_CRH_MODE15_1;
+    GPIOC->ODR |= GPIO_ODR_ODR15;
+
     GPIOA->CRL &= ~GPIO_CRL_CNF1;
     GPIOA->CRL &= ~GPIO_CRL_MODE1_1;
 	GPIOA->CRL |= GPIO_CRL_CNF1_1;
@@ -33,7 +38,10 @@ int main() {
     InitInterrupt();
 //(GPIOA->IDR &= GPIO_IDR_IDR1)==0
     while (1) {
-        for (uint32_t i = 0; i < 50000; i++);
+        GPIOC -> ODR |= GPIO_ODR_ODR15;
+        for (uint32_t i = 0; i < 1000000; i++) asm("nop");
+        GPIOC -> ODR &= ~GPIO_ODR_ODR15;
+        for (uint32_t i = 0; i < 5000000; i++) asm("nop");
     }
     return 0;
 }
